@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>גרעין הנושא - מסיפור חיים לגרעין | LTT</title>
+<meta name="description" content="כלי אישי לחקר עצמי לפי שיטת LTT (ספירלת ההתפתחות האישית): מסיפור חיים פתוח, דרך שמונה תחנות, אל גרעין הנושא - עם סבבים חוזרים, שמירה אוטומטית וייצוא למסמך Word.">
+<meta name="theme-color" content="#F2E9DC">
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="גרעין הנושא - מסיפור חיים לגרעין">
+<meta property="og:description" content="כלי אישי לחקר עצמי לפי שיטת LTT: מסיפור חיים, דרך שמונה תחנות, אל גרעין הנושא.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F2E9DC'/%3E%3Cpath d='M32 32c0-3 4-3 4 0s-6 5-6 0 8-8 12-4 0 14-10 14S14 38 16 26 34 8 46 16' fill='none' stroke='%238B5E3C' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+<style>
+  html, body { margin:0; padding:0; }
+  textarea, input { font-family: inherit; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react" data-type="module">
+const { useState, useEffect, useRef } = React;
+
+if (!window.storage) {
+  window.storage = {
+    async get(key) {
+      const v = localStorage.getItem(key);
+      if (v === null) { const e = new Error('not found'); throw e; }
+      return { key, value: v, shared: false };
+    },
+    async set(key, value) {
+      localStorage.setItem(key, value);
+      return { key, value, shared: false };
+    },
+    async delete(key) {
+      localStorage.removeItem(key);
+      return { key, deleted: true, shared: false };
+    },
+    async list(prefix) {
+      const keys = Object.keys(localStorage).filter(k => !prefix || k.startsWith(prefix));
+      return { keys, prefix, shared: false };
+    },
+  };
+}
+
+function Ic({ size = 20, style, className, children, viewBox = "0 0 24 24" }) {
+  return (
+    <svg width={size} height={size} viewBox={viewBox} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style} className={className}>
+      {children}
+    </svg>
+  );
+}
+function Sparkles(p) { return <Ic {...p}><path d="M12 3l1.4 4.2L18 9l-4.6 1.8L12 15l-1.4-4.2L6 9l4.6-1.8L12 3z" /><path d="M19 15l.6 1.8L22 18l-2.4.9L19 21l-.6-2.1L16 18l2.4-1.2L19 15z" /></Ic>; }
+function HelpCircle(p) { return <Ic {...p}><circle cx="12" cy="12" r="9" /><path d="M9.2 9.5a2.8 2.8 0 1 1 4 2.6c-.9.5-1.2 1-1.2 2" /><circle cx="12" cy="17" r="0.6" fill="currentColor" /></Ic>; }
+function Plus(p) { return <Ic {...p}><path d="M12 5v14M5 12h14" /></Ic>; }
+function ChevronLeft(p) { return <Ic {...p}><path d="M15 5l-7 7 7 7" /></Ic>; }
+function ChevronRight(p) { return <Ic {...p}><path d="M9 5l7 7-7 7" /></Ic>; }
+function Loader2(p) { return <Ic {...p}><path d="M12 3a9 9 0 1 0 9 9" /></Ic>; }
+function Copy(p) { return <Ic {...p}><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></Ic>; }
+function Check(p) { return <Ic {...p}><path d="M20 6L9 17l-5-5" /></Ic>; }
+function User(p) { return <Ic {...p}><circle cx="12" cy="8" r="4" /><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" /></Ic>; }
+function FileDown(p) { return <Ic {...p}><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M12 12v6m0 0l-2.5-2.5M12 18l2.5-2.5" /></Ic>; }
+function Upload(p) { return <Ic {...p}><path d="M12 16V4m0 0l-4 4m4-4l4 4" /><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" /></Ic>; }
+function History(p) { return <Ic {...p}><circle cx="12" cy="13" r="8" /><path d="M12 9v4l3 2" /><path d="M4.6 6.6L3 5m0 0v3m0-3h3" /></Ic>; }
+function ArrowUpRight(p) { return <Ic {...p}><path d="M7 17L17 7" /><path d="M8 7h9v9" /></Ic>; }
+function FileText(p) { return <Ic {...p}><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M8.5 13h7M8.5 17h7" /></Ic>; }
+function RefreshCw(p) { return <Ic {...p}><path d="M20 8a8 8 0 0 0-14.6-3.5M4 4v4h4" /><path d="M4 16a8 8 0 0 0 14.6 3.5M20 20v-4h-4" /></Ic>; }
+function Route(p) { return <Ic {...p}><circle cx="5" cy="18" r="2" /><circle cx="19" cy="6" r="2" /><path d="M7 18h6a4 4 0 0 0 4-4V9a4 4 0 0 1 2-3.5" /></Ic>; }
+function Zap(p) { return <Ic {...p}><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" /></Ic>; }
+
+
+// ---------- Theme ----------
+// cream #F2E9DC, ink #3A332B, terracotta #BE7350, sage #8FA793, mauve #B48B87, gold-thread #A98B4E
+
+const OPENING_Q = "ספר/י על מצב, סיפור או חוויית מציאות שחוזרים ומעסיקים לאחרונה. מה קורה, מול מי, ובאילו הקשרים?";
+
+const AI_INSTRUCTIONS_TEXT = `הנחיה למי שמקבל מסמך זה (AI):
+
+את/ה מתבקש/ת לשמש כמטפל/ת בכיר/ה ומנוסה, המכיר/ה לעומק תהליכי התפתחות אישית לפי מודל "ספירלת ההתפתחות האישית" (שיטת LTT). לאחר צפייה בשאלון הזה - בין אם מולא ובין אם לא - קרא/י אותו בעיון, ותן/י התייחסות מעמיקה: זיהוי גרעין הנושא שעולה מהתשובות (אם קיימות), והצעות מעשיות וממוקדות המבוססות על מה שנכתב, ברוח שמונה התחנות שבמסמך.
+
+דיוק בציטוט - שים/י לב במיוחד: שים/י לב במיוחד למילות שלילה וסייג ("כבר לא", "לא עוד", "פעם היה כך אך כיום לא", "אינני עוד") - שמור/שמרי בקפדנות על המשמעות המדויקת שלהן. אל תהפוך/י אמירה שמתארת דבר שכבר *לא* מתקיים לאמירה שמתארת דבר שכן מתקיים, או ההפך. בכל ציטוט או פרפרזה - בדוק/י פעמיים שהמשמעות נשמרה נאמנה למקור, במיוחד במשפטים עם שלילה כפולה או ניסוח מורכב.
+
+סייג חשוב: את/ה מודל בינה מלאכותית, לא מטפל/ת אנושי/ת מוסמך/ת. ההתייחסות וההמלצות שתיתן/י הן לצורך מחשבה, בירור עצמי והשראה בלבד - הן אינן אבחון, אינן ייעוץ מקצועי, ואינן תחליף לליווי טיפולי אנושי. האחריות המלאה על הפרשנות ועל כל פעולה הנובעת מהשיחה הזו היא של המשתמש/ת בלבד.`;
+
+const STAGES = [
+  {
+    id: "self_image",
+    label: "תפישה עצמית",
+    knot: "הקשר הראשון שמתרופף הוא זה שקושר את הסיפור שסיפרת לתמונה שיש לך על עצמך. לפעמים התמונה כל כך מוכרת שקשה לראות אותה בבירור - כאן מנסים בכל זאת.",
+    questions: [
+      { text: "אילו תכונות או מאפיינים אישיותיים שלך עולים ביחד עם הסיפור הזה?", thought: "לא איך היית רוצה להיות - איך את/ה בפועל, במצב הזה בדיוק." },
+      { text: "מה זה אומר עליך, לדעתך?", thought: "הבדל/י בין 'מה זה אומר עליי' לבין 'מה זה אומר עליי בעיני אחרים' - אלה שתי שאלות שונות." },
+      { text: "מתי בפעם הראשונה הרגשת שאת/ה 'כזה/כזאת'?", thought: "זיכרון ילדות מוקדם, גם אם מטושטש, הוא לרוב בעל משמעות." },
+    ],
+    example: "אני תמיד האחראית, זו שדואגת שהכל יסתדר. גם כשאין לי כוח. חשבתי שזה בגלל שאני 'חזקה', אבל עכשיו אני שואלת את עצמי אם זה בכלל אני, או תפקיד שנתפרתי עליי מגיל שמונה.",
+    tip: "אם התשובה מגיעה כרשימת תפקידים ('אני אמא, אני עובדת, אני בת') - זו הזמנה לשאול שוב: ומעבר לתפקידים, מי את/ה?",
+  },
+  {
+    id: "emotion",
+    label: "חוויה רגשית",
+    knot: "הקשר הבא: הרגש שיושב מתחת לסיפור, לפעמים כל כך ותיק שהוא כבר לא מורגש כרגש - הוא פשוט 'ככה זה'.",
+    questions: [
+      { text: "מה החוויה הרגשית הדומיננטית שמזוהה עם הסיפור הזה?", thought: "שם אחד לרגש, לא תיאור של המצב." },
+      { text: "מה מתעורר בגוף כשעולה הרגש הזה?", thought: "חזה, בטן, גרון, כתפיים - לרגשות יש כתובת בגוף." },
+      { text: "האם יש רגש נוסף שמסתתר מתחת לרגש הראשון?", thought: "כעס לרוב מכסה על פגיעות; עצב לרוב מכסה על כעס שאסור היה להביע." },
+    ],
+    example: "זה משהו כמו בושה, אבל בושה שמתחפשת לעייפות. כשזה עולה אני מרגישה את זה בבטן, כמו התכווצות. ואם אני כנה - מתחת לבושה יש כעס ישן, על מי שלימד אותי להתבייש.",
+    tip: "אם עולה 'אני לא מרגיש/ה כלום' - זו לרוב לא אמת אלא הרגל של ניתוק. אפשר לשאול: 'אם היית מרגיש/ה משהו, מה זה היה?'",
+  },
+  {
+    id: "beliefs_reactions",
+    label: "אמונות ובחירות · התגובה האוטומטית",
+    knot: "עכשיו מגיעים לקשר שמניע את כל השאר בלי רשות: התגובה שקורית מעצמה, לפני שהספקת לבחור.",
+    questions: [
+      { text: "מה התגובה האוטומטית, הדפוס או המנגנון שעולה בסיטואציה הזו או אחריה?", thought: "מה עושים בפועל, לא מה 'צריך' לעשות." },
+      { text: "מה קורה רגע לפני, שמפעיל את התגובה הזו?", thought: "טריגר קטן - מילה, טון, מבט." },
+      { text: "איזו אמונה, אם בכלל, 'מצדיקה' את התגובה הזו בעיניך?", thought: "לפעמים האמונה נשמעת הגיונית לגמרי - זה החלק המסוכן שבה." },
+    ],
+    example: "כשמישהו מעיר לי הערה, אני נסגרת. פשוט ככה, בלי לחשוב. ואז אני מספרת לעצמי שאני 'לא טובה בביקורת' - וזה מרגיש נכון, למרות שאני לא בטוחה שזה באמת אני.",
+    tip: "התגובה האוטומטית היא לרוב הדבר האחרון ששמים לב אליו, כי היא קורית מהר מדי. עוזר לשאול על הרגע אחרי - ומשם לשחזר אחורה.",
+  },
+  {
+    id: "habits",
+    label: "הרגלים והתניות",
+    knot: "התגובה החוזרת, כשהיא נשנית מספיק פעמים, קופאת להרגל. כאן מנסים למפות את הצורה הקבועה שהיא לבשה.",
+    questions: [
+      { text: "אילו הרגלים או דפוסי התנהגות קבועים נלווים לתגובה הזו?", thought: "פעולות ממש - לא כוונות." },
+      { text: "מה ההרגל הזה 'עושה בשבילך' - ממה הוא מגן?", thought: "לכל הרגל יש תפקיד הישרדותי, גם אם הוא כבר לא נחוץ." },
+      { text: "מה היה קורה אם ההרגל הזה פשוט ייעלם מחר?", thought: "בדיקה של המחיר האמיתי מול הרווח המדומה." },
+    ],
+    example: "כשקשה לי, אני מנקה את הבית באובססיביות. זה נותן לי תחושת שליטה כשהכל מרגיש חמקמק. אבל זה גם אומר שאני אף פעם לא באמת עוצרת להרגיש את מה שקשה.",
+    tip: "הרגלים מתגלים לרוב דרך הסביבה הקרובה - שאלה עקיפה כמו 'מה בן/בת הזוג היה אומר שאת/ה עושה כשקשה לך' מוציאה תשובות כנות יותר.",
+  },
+  {
+    id: "lifestyle",
+    label: "סגנון חיים · הלמידה הרגשית",
+    knot: "מתוך ההרגל אפשר כבר להתחיל לדמיין תבנית חדשה - לא עדיין לבחור בה, רק לגעת בה.",
+    questions: [
+      { text: "מהי הלמידה הרגשית - מה יכול לסייע לבסס חוויה חדשה במקום הישנה?", thought: "למידה, לא החלטה - יש הבדל." },
+      { text: "מה היית רוצה להרגיש במקום זה?", thought: "רגש חלופי קונקרטי, לא 'להרגיש טוב יותר' באופן כללי." },
+      { text: "מה הצעד הכי קטן שיוכיח לך שזה אפשרי?", thought: "קטן עד כדי גיחוך - זה בדיוק בגודל הנכון." },
+    ],
+    example: "הייתי רוצה להרגיש שאני יכולה לנוח בלי שזה 'ייגמר לי'. יש לי כבר חברה אחת שמראה לי איך זה נראה - אני יכולה להתחיל בלצפות בה, לפני שאני מנסה בעצמי.",
+    tip: "השלב הזה נוטה לקפוץ ישר לפתרונות. חשוב לעכב ולתת מקום ל'איך זה מרגיש' לפני 'מה עושים'.",
+  },
+  {
+    id: "worldview",
+    label: "תפישת עולם אישית · הגרעין המנטלי",
+    knot: "כאן מתקרבים לקשר המרכזי - התפישה שמחזיקה את כל השאר במקום, כמו חוט שכל שאר הקשרים כרוכים סביבו.",
+    questions: [
+      { text: "איזו תפישת עולם או 'אמת' פנימית עומדת מאחורי כל מה שעלה עד כה?", thought: "משפט קצר, כמעט כמו כותרת." },
+      { text: "איך היא משרתת אותך, ומה המחיר שהיא גובה?", thought: "לכל תפישה, גם הכואבת, יש תועלת - אחרת היא לא הייתה שורדת." },
+      { text: "אם היית צריך/ה לנסח את ההפך הגמור מהתפישה הזו - איך זה היה נשמע?", thought: "לא כדי להאמין בזה עדיין - רק כדי לדעת שזה קיים כאפשרות." },
+    ],
+    example: "'אני צריכה להיות מושלמת כדי להיות ראויה לאהבה' - זה המשפט. הוא הגיע מבית שבו שבחים היו קשורים להישגים. הוא עוזר לי להצליח, אבל הוא גם אף פעם לא נותן לי לנוח.",
+    tip: "זו התחנה שהכי קל לרדת ממנה לניתוח אינטלקטואלי. אם עולה הסבר במקום חוויה - אפשר להחזיר בעדינות: 'ואיך זה מרגיש כשאת/ה אומר/ת את זה בקול?'",
+  },
+  {
+    id: "free_choice",
+    label: "בחירה חופשית · נרטיב חדש",
+    knot: "הקשר האחרון שנפרם הוא בעצם התחלה: הרגע שבו יש בחירה, ולא רק תגובה.",
+    questions: [
+      { text: "אילו נרטיב חדש או משמעות חדשה יכולים להחליף את התפישה הישנה?", thought: "לא הפוך גמור - גרסה שיש בה מקום גם לישן." },
+      { text: "מהי פעולה אחת קטנה וישימה שתשקף את הבחירה החדשה?", thought: "בתוך השבוע הקרוב, לא 'בעתיד'." },
+      { text: "מה היית אומר/ת למי שהיה/הייתה בתחילת הדרך הזו, לפני כל השאלות האלה?", thought: "סגירת מעגל - לפעמים התשובה הכי מדויקת." },
+    ],
+    example: "אני לא חייבת להיות מושלמת כדי שיאהבו אותי - אני יכולה להיות מספיק כמו שאני. השבוע אני מתכננת לבקש עזרה בפעם הראשונה בלי להתנצל עליה.",
+    tip: "חשוב לוודא שהנרטיב החדש לא הופך בעצמו לתביעה חדשה ('אני *חייבת* להשתחרר מהשלמנות') - בחירה חופשית אמורה להרגיש כמו הקלה, לא כמו משימה נוספת.",
+  },
+  {
+    id: "next_encounter",
+    label: "אסטרטגיה למפגש הבא",
+    knot: "כל מה שעד כה היה הבנה. הקשר האחרון-שבאחרונים הוא לא תובנה - הוא תרגול: מה בדיוק עושים בפעם הבאה שהנושא הזה חוזר, כדי לפגוש אותו ממדרגה חדשה ולא מתוך התגובה ההרגלית שנבנתה כל החיים.",
+    questions: [
+      { text: "מהם הסימנים המוקדמים ביותר שהמצב הזה מתחיל - מחשבה, תחושה בגוף, או פרט קטן בסיטואציה?", thought: "ככל שהזיהוי מוקדם יותר, יש יותר מרחב לבחור אחרת." },
+      { text: "איזה משפט-עוגן קצר יכול להזכיר לך, באותו רגע בדיוק, את הבחירה החדשה?", thought: "משפט קצר מספיק כדי לומר בלב, לא נאום." },
+      { text: "אם בכל זאת תיפול/י בחזרה לדפוס הישן - מה תגיד/י לעצמך כדי לחזור לגישה החדשה, בלי לוותר עליה?", thought: "המשפט הזה הוא לרוב החשוב מכולם - הוא מה שמונע מנפילה אחת להפוך לוויתור." },
+    ],
+    example: "הסימן המוקדם שלי הוא כיווץ בכתפיים, עוד לפני שאני שמה לב שאני נסגרת. השבוע אני מתרגלת עם ההערה הכי קטנה שאני מקבלת - עוצרת שנייה, נושמת, ורק אז עונה. סימנתי לחברה הכי קרובה שאני עובדת על זה, כדי שתדע להזכיר לי בעדינות אם היא רואה שאני נסגרת.",
+    tip: "אם עולה תוכנית שאפתנית מדי ('מעכשיו אני תמיד...') - זו הזמנה לעדן: המטרה היא תרגול קטן וחוזר, לא שינוי מושלם מהפעם הראשונה. נפילה אחת היא חלק מהתהליך, לא כישלון שלו.",
+  },
+];
+
+const LIVE_TARGET = 11;
+
+// Link to the companion quick tool ("מסיפור לגרעין"). Update this once both tools
+// are actually published - e.g. a sibling folder on the same GitHub Pages site,
+// or its own repo URL entirely. Left as a relative guess for now.
+const QUICK_TOOL_URL = "../zihuy-gerein/";
+
+const uid = () => Math.random().toString(36).slice(2, 10);
+const fmtDate = (iso) => {
+  try {
+    return new Date(iso).toLocaleDateString("he-IL", { day: "numeric", month: "short", year: "numeric" });
+  } catch (e) {
+    return "";
+  }
+};
+
+async function callClaude(apiKey, prompt, system) {
+  const headers = { "Content-Type": "application/json" };
+  if (apiKey && apiKey.trim()) {
+    headers["x-api-key"] = apiKey.trim();
+    headers["anthropic-version"] = "2023-06-01";
+    headers["anthropic-dangerous-direct-browser-access"] = "true";
+  }
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      system,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message || "API error");
+  const text = (data.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n");
+  return text.trim();
+}
+
+function ThreadDivider() {
+  return (
+    <svg viewBox="0 0 400 24" className="w-full h-4" preserveAspectRatio="none">
+      <path
+        d="M0 12 C 40 2, 80 22, 120 12 S 200 2, 240 12 S 320 22, 360 12 S 400 2, 400 12"
+        fill="none" stroke="#B08A4E" strokeWidth="1" strokeDasharray="1 7" strokeLinecap="round" opacity="0.6"
+      />
+    </svg>
+  );
+}
+
+function SpiralMark({ size = 34, color = "#B08A4E" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
+      <path
+        d="M20 4 C 27 4 33 9 33 16 C 33 22 28 26 22 26 C 17 26 14 23 14 19 C 14 16 16 14 19 14 C 21 14 23 15.5 23 18"
+        stroke={color} strokeWidth="1.6" strokeLinecap="round" fill="none"
+      />
+      <circle cx="23" cy="18" r="1.6" fill={color} />
+    </svg>
+  );
+}
+
+// Signature element 1: the thread of the current round, one knot per station,
+// loosening knot by knot as the person moves through the seven stations.
+function KnotThread({ total, currentIndex }) {
+  const width = 400;
+  const y = 22;
+  const marginX = 26;
+  const step = (width - marginX * 2) / (total - 1);
+  return (
+    <svg viewBox={`0 0 ${width} 44`} className="w-full" style={{ height: 40 }} preserveAspectRatio="none">
+      <path d={`M${marginX} ${y} L${width - marginX} ${y}`} stroke="#E3D5C0" strokeWidth="1.4" fill="none" />
+      {Array.from({ length: total }).map((_, i) => {
+        const cx = marginX + step * i;
+        if (i < currentIndex) {
+          return (
+            <g key={i}>
+              <circle cx={cx} cy={y} r="2" fill="#8FA793" />
+              <path d={`M${cx} ${y} q 7 -11 13 -4`} stroke="#8FA793" strokeWidth="1.4" fill="none" strokeLinecap="round" opacity="0.75" />
+            </g>
+          );
+        }
+        if (i === currentIndex) {
+          return (
+            <g key={i}>
+              <circle cx={cx} cy={y} r="7.5" fill="none" stroke="#BE7350" strokeWidth="2" strokeDasharray="15 4.5" />
+              <circle cx={cx} cy={y} r="2" fill="#BE7350" />
+            </g>
+          );
+        }
+        return <circle key={i} cx={cx} cy={y} r="5" fill="none" stroke="#C9B79C" strokeWidth="1.5" opacity="0.7" />;
+      })}
+    </svg>
+  );
+}
+
+// Signature element 2: the ascending spiral of rounds. Each finished round is a point;
+// rounds that continue one another climb the same spoke, further out each time -
+// the same theme, met again, understood a little deeper. Unrelated topics open a new spoke.
+function SpiralOverview({ rounds }) {
+  const finished = rounds.filter((r) => r.summary);
+  if (finished.length === 0) return null;
+  const angleMap = {};
+  let nextFreshAngle = -90;
+  const GOLDEN = 137.5;
+  const nodes = finished.map((r, i) => {
+    let angle;
+    const parentId = r.basedOn && r.basedOn.parentRoundId;
+    if (parentId && angleMap[parentId] !== undefined) {
+      angle = angleMap[parentId];
+    } else {
+      angle = nextFreshAngle;
+      nextFreshAngle += GOLDEN;
+    }
+    angleMap[r.id] = angle;
+    const radius = 18 + i * 12.5;
+    const rad = (angle * Math.PI) / 180;
+    return {
+      id: r.id,
+      cx: 100 + radius * Math.cos(rad),
+      cy: 100 + radius * Math.sin(rad),
+      isChain: !!parentId,
+    };
+  });
+  const pathD = nodes.map((n, i) => `${i === 0 ? "M" : "L"}${n.cx.toFixed(1)} ${n.cy.toFixed(1)}`).join(" ");
+  return (
+    <div className="mb-6 flex flex-col items-center">
+      <svg viewBox="0 0 200 200" style={{ width: 168, height: 168 }}>
+        <path d={pathD} stroke="#E3D5C0" strokeWidth="1" fill="none" strokeDasharray="2 4" />
+        {nodes.map((n, i) => (
+          <circle key={n.id} cx={n.cx} cy={n.cy} r={i === nodes.length - 1 ? 5 : 3.5} fill={n.isChain ? "#BE7350" : "#8FA793"} opacity={i === nodes.length - 1 ? 1 : 0.75} />
+        ))}
+      </svg>
+      <div className="text-[11px] opacity-45 mt-1 text-center leading-relaxed max-w-[220px]">כל סבב - נקודה על הספירלה. סבבים שממשיכים זה את זה (בטרקוטה) עולים על אותו קו - אותו נושא, פעם נוספת, קצת יותר עמוק.</div>
+    </div>
+  );
+}
+
+const cardStyle = { background: "#fff", border: "1px solid #E3D5C0" };
+
+// Swipe navigation: swipe right = forward/next, swipe left = back/previous.
+// Ignores swipes that start inside a textarea/input so text selection isn't hijacked.
+function useSwipeNav(onRight, onLeft) {
+  const startRef = useRef(null);
+  const onTouchStart = (e) => {
+    const t = e.touches[0];
+    const tag = e.target && e.target.tagName;
+    startRef.current = { x: t.clientX, y: t.clientY, blocked: tag === "TEXTAREA" || tag === "INPUT" };
+  };
+  const onTouchEnd = (e) => {
+    const start = startRef.current;
+    startRef.current = null;
+    if (!start || start.blocked) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx > 0 && onRight) onRight();
+      else if (dx < 0 && onLeft) onLeft();
+    }
+  };
+  return { onTouchStart, onTouchEnd };
+}
+
+
+function downloadJSON(data, filename) {
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+// Copy/export inside a sandboxed preview (like this chat) can silently fail -
+// clipboard and file-download permissions aren't always granted there.
+// This always falls back to a visible, selectable text block so the action
+// never just does nothing. It works the same way (and just as reliably)
+// once the tool is deployed as its own page.
+function ExportBlock({ label, icon: Icon, getText, filename, isJson, primary }) {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const reveal = async () => {
+    const willOpen = !open;
+    setOpen(willOpen);
+    if (willOpen) {
+      try {
+        await navigator.clipboard.writeText(getText());
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1800);
+      } catch (e) {
+        // clipboard blocked here - the textarea below is the fallback
+      }
+    }
+  };
+
+  const tryDownload = () => {
+    try {
+      const blob = new Blob([getText()], { type: (isJson ? "application/json" : "text/plain") + ";charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    } catch (e) {}
+  };
+
+  return (
+    <div className="mb-2">
+      <button
+        onClick={reveal}
+        className="w-full rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2"
+        style={primary ? { background: "#BE7350", color: "#fff" } : cardStyle}
+      >
+        {copied ? <Check size={16} /> : <Icon size={16} />} {label}
+      </button>
+      {open && (
+        <div className="mt-2 rounded-xl px-3 py-3" style={{ background: "#FAF6EF", border: "1px solid #EEE3D0" }}>
+          <textarea
+            readOnly
+            value={getText()}
+            onFocus={(e) => e.target.select()}
+            rows={7}
+            className="w-full rounded-lg px-2.5 py-2 text-xs outline-none"
+            style={{ background: "#fff", border: "1px solid #EEE3D0", direction: isJson ? "ltr" : "rtl", textAlign: isJson ? "left" : "right" }}
+          />
+          <div className="text-[11px] opacity-55 mt-1.5 leading-relaxed">
+            {copied ? "הועתק אוטומטית ללוח. " : ""}
+            אם ההעתקה האוטומטית לא עבדה - גע/י בטקסט למעלה, הוא נבחר אוטומטית, ואפשר להעתיק ידנית (העתק/Copy).
+          </div>
+          {filename && (
+            <button onClick={tryDownload} className="text-xs mt-2 opacity-60 underline">נסה/י גם הורדה כקובץ</button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Downloads a real .docx (Hebrew renders correctly everywhere, unlike a raw text
+// file which some Android viewers mis-decode). Needs the docx.js CDN script.
+function DocxDownloadButton({ label, buildBlocks, title, filename, primary }) {
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+  const go = async () => {
+    setLoading(true);
+    setErr("");
+    try {
+      const blob = await buildDocxBlob(title, buildBlocks());
+      downloadBlob(blob, filename);
+    } catch (e) {
+      setErr("לא הצלחתי ליצור את קובץ ה-Word - ודא/י שיש חיבור לאינטרנט ונסה/י שוב.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <div className="mb-2">
+      <button onClick={go} disabled={loading} className="w-full rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2" style={primary ? { background: "#3A332B", color: "#F2E9DC" } : cardStyle}>
+        {loading ? <Loader2 size={16} className="animate-spin" /> : <FileDown size={16} />} {label}
+      </button>
+      {err && <div className="text-[11px] mt-1 px-1" style={{ color: "#8A3E24" }}>{err}</div>}
+    </div>
+  );
+}
+
+function buildRoundExport(patientName, round) {
+  return {
+    type: "gerein-hanose-round",
+    version: 2,
+    patientName,
+    roundId: round.id,
+    dateISO: round.dateISO,
+    track: round.track,
+    opening: round.opening,
+    entries: round.entries,
+    summary: round.summary,
+  };
+}
+
+function roundTranscript(round) {
+  let out = "";
+  if (round.opening) {
+    out += `--- פתיחה: סיפור חיים / חוויית מציאות ---\nשאלה: ${round.opening.q}\nתשובה: ${round.opening.a}\n\n`;
+  }
+  round.entries.forEach((e) => {
+    out += `--- ${e.stageLabel} ---\n`;
+    if (e.questions) {
+      e.questions.forEach((q) => (out += `שאלה: ${q.text}\nתשובה: ${q.answer}\n`));
+    } else {
+      out += `שאלה: ${e.question}\nתשובה: ${e.answer}\n`;
+    }
+    out += "\n";
+  });
+  return out;
+}
+
+function buildBlankQuestionnaire() {
+  let out = `גרעין הנושא - כל שאלות המסלול המלא (ריק, לשימוש בשיחה או במילוי עצמאי)\n\n`;
+  out += `פתיחה:\n${OPENING_Q}\n\n`;
+  STAGES.forEach((s, si) => {
+    out += `--- תחנה ${si + 1} מתוך ${STAGES.length}: ${s.label} ---\n${s.knot}\n\n`;
+    s.questions.forEach((q, qi) => {
+      out += `${qi + 1}. ${q.text}\n`;
+      if (q.thought) out += `   💭 ${q.thought}\n`;
+    });
+    out += `\nדוגמה: ${s.example}\n\n`;
+  });
+  out += `\n\n${AI_INSTRUCTIONS_TEXT}\n`;
+  return out;
+}
+
+// Builds a real .docx (via the docx.js library loaded from CDN) so Hebrew text
+// downloads correctly on every device, instead of a plain-text file that some
+// Android viewers mis-decode into mojibake.
+let _docxLibPromise = null;
+function loadDocxLib() {
+  if (window.docx) return Promise.resolve(window.docx);
+  if (!_docxLibPromise) {
+    _docxLibPromise = import("https://esm.sh/docx@8.5.0").then((mod) => {
+      window.docx = mod;
+      return mod;
+    });
+  }
+  return _docxLibPromise;
+}
+
+async function buildDocxBlob(title, blocks) {
+  const docxLib = await loadDocxLib();
+  const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docxLib;
+  const rtl = { alignment: AlignmentType.RIGHT, bidirectional: true };
+  const children = [new Paragraph({ text: title, heading: HeadingLevel.TITLE, ...rtl })];
+  blocks.forEach((b) => {
+    if (b.type === "h1") children.push(new Paragraph({ text: b.text, heading: HeadingLevel.HEADING_1, ...rtl, spacing: { before: 300, after: 100 } }));
+    else if (b.type === "bold") children.push(new Paragraph({ children: [new TextRun({ text: b.text, bold: true })], ...rtl }));
+    else if (b.type === "italic") children.push(new Paragraph({ children: [new TextRun({ text: b.text, italics: true })], ...rtl }));
+    else if (b.type === "space") children.push(new Paragraph({ text: "", ...rtl }));
+    else children.push(new Paragraph({ text: b.text || "", ...rtl }));
+  });
+  const doc = new Document({ sections: [{ children }] });
+  return Packer.toBlob(doc);
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function questionnaireDocxBlocks() {
+  const blocks = [{ type: "bold", text: OPENING_Q }, { type: "space" }];
+  STAGES.forEach((s, si) => {
+    blocks.push({ type: "h1", text: `תחנה ${si + 1} מתוך ${STAGES.length}: ${s.label}` });
+    blocks.push({ type: "text", text: s.knot });
+    blocks.push({ type: "space" });
+    s.questions.forEach((q, qi) => {
+      blocks.push({ type: "bold", text: `${qi + 1}. ${q.text}` });
+      if (q.thought) blocks.push({ type: "text", text: `💭 ${q.thought}` });
+      blocks.push({ type: "space" });
+    });
+    blocks.push({ type: "italic", text: `דוגמה: ${s.example}` });
+    blocks.push({ type: "space" });
+  });
+  blocks.push({ type: "h1", text: "הנחיות ל-AI" });
+  AI_INSTRUCTIONS_TEXT.split("\n").forEach((line) => blocks.push({ type: "text", text: line }));
+  return blocks;
+}
+
+function roundDocxBlocks(round) {
+  const blocks = [];
+  if (round.opening) {
+    blocks.push({ type: "h1", text: "פתיחה: סיפור חיים / חוויית מציאות" });
+    blocks.push({ type: "bold", text: round.opening.q });
+    blocks.push({ type: "text", text: round.opening.a });
+    blocks.push({ type: "space" });
+  }
+  round.entries.forEach((e) => {
+    blocks.push({ type: "h1", text: e.stageLabel });
+    if (e.questions) {
+      e.questions.forEach((q) => {
+        blocks.push({ type: "bold", text: q.text });
+        blocks.push({ type: "text", text: q.answer || "" });
+      });
+    } else {
+      blocks.push({ type: "bold", text: e.question });
+      blocks.push({ type: "text", text: e.answer || "" });
+    }
+    blocks.push({ type: "space" });
+  });
+  if (round.summary && !round.summary.manual) {
+    blocks.push({ type: "h1", text: "גרעין הנושא" });
+    blocks.push({ type: "text", text: round.summary.coreTheme });
+    if (round.summary.refinementNote) {
+      blocks.push({ type: "space" });
+      blocks.push({ type: "bold", text: "מה זוקק ביחס לסבב הקודם" });
+      blocks.push({ type: "text", text: round.summary.refinementNote });
+    }
+    blocks.push({ type: "space" });
+    blocks.push({ type: "h1", text: "מהגלוי אל הסמוי" });
+    round.summary.fromVisibleToHidden.forEach((r) => {
+      blocks.push({ type: "bold", text: r.label });
+      blocks.push({ type: "text", text: r.value });
+    });
+    blocks.push({ type: "space" });
+    blocks.push({ type: "h1", text: "מהסמוי אל הגלוי" });
+    round.summary.fromHiddenToVisible.forEach((r) => {
+      blocks.push({ type: "bold", text: r.label });
+      blocks.push({ type: "text", text: r.value });
+    });
+  }
+  blocks.push({ type: "space" });
+  blocks.push({ type: "h1", text: "הנחיות ל-AI" });
+  AI_INSTRUCTIONS_TEXT.split("\n").forEach((line) => blocks.push({ type: "text", text: line }));
+  return blocks;
+}
+
+// Combined document: the AI response the user picked, up front, followed by
+// the full filled questionnaire below it - one document instead of juggling two.
+function combinedText(round, aiResponse) {
+  return `גרעין הנושא - מסמך משולב\n\n=== התשובה/הניתוח שנבחר ===\n\n${aiResponse.trim()}\n\n\n=== השאלון כפי שמולא ===\n\n${roundTranscript(round)}`;
+}
+
+function combinedDocxBlocks(round, aiResponse) {
+  const blocks = [{ type: "h1", text: "התשובה/הניתוח שנבחר" }];
+  aiResponse.trim().split("\n").forEach((line) => blocks.push({ type: "text", text: line }));
+  blocks.push({ type: "space" });
+  blocks.push({ type: "h1", text: "השאלון כפי שמולא" });
+  if (round.opening) {
+    blocks.push({ type: "bold", text: round.opening.q });
+    blocks.push({ type: "text", text: round.opening.a });
+    blocks.push({ type: "space" });
+  }
+  round.entries.forEach((e) => {
+    blocks.push({ type: "h1", text: e.stageLabel });
+    if (e.questions) {
+      e.questions.forEach((q) => {
+        blocks.push({ type: "bold", text: q.text });
+        blocks.push({ type: "text", text: q.answer || "" });
+      });
+    } else {
+      blocks.push({ type: "bold", text: e.question });
+      blocks.push({ type: "text", text: e.answer || "" });
+    }
+    blocks.push({ type: "space" });
+  });
+  return blocks;
+}
+
+function App() {
+  // screen: setup | roundChoice | resumeChoice | opening | trackChoice | session | summary
+  const [screen, setScreen] = useState("setup");
+  const [patientName, setPatientName] = useState("");
+  const [sessionId, setSessionId] = useState(null);
+  const [rounds, setRounds] = useState([]);
+  const [activeRoundId, setActiveRoundId] = useState(null);
+
+  const [openingDraft, setOpeningDraft] = useState("");
+
+  const [stageIndex, setStageIndex] = useState(0);
+  const [currentStage, setCurrentStage] = useState(null); // draft entry for structured track
+
+  const [liveProposal, setLiveProposal] = useState(null); // {text, answer, revealed}
+
+  const [savedNames, setSavedNames] = useState([]);
+  const [loadingKey, setLoadingKey] = useState(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [externalAI, setExternalAI] = useState("");
+  const [importedRound, setImportedRound] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [apiKeyDraft, setApiKeyDraft] = useState("");
+  const [showSettings, setShowSettings] = useState(false);
+  const [settingsSaved, setSettingsSaved] = useState(false);
+  const [aiUnlocked, setAiUnlocked] = useState(false);
+  const bottomRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await window.storage.get("patient-index", false);
+        if (r && r.value) setSavedNames(JSON.parse(r.value));
+      } catch (e) {}
+      try {
+        const k = await window.storage.get("settings:apiKey", false);
+        if (k && k.value) {
+          setApiKey(k.value);
+          setApiKeyDraft(k.value);
+        }
+      } catch (e) {}
+      try {
+        const u = await window.storage.get("settings:aiUnlocked", false);
+        if (u && u.value === "true") setAiUnlocked(true);
+      } catch (e) {}
+    })();
+  }, []);
+
+  const revealAdvanced = async () => {
+    setShowSettings(true);
+    setAiUnlocked(true);
+    try {
+      await window.storage.set("settings:aiUnlocked", "true", false);
+    } catch (e) {}
+  };
+
+  const saveApiKey = async () => {
+    try {
+      await window.storage.set("settings:apiKey", apiKeyDraft.trim(), false);
+      setApiKey(apiKeyDraft.trim());
+      setSettingsSaved(true);
+      setTimeout(() => setSettingsSaved(false), 1800);
+    } catch (e) {
+      setError("לא הצלחתי לשמור את המפתח.");
+    }
+  };
+
+  const clearApiKey = async () => {
+    try {
+      await window.storage.set("settings:apiKey", "", false);
+      setApiKey("");
+      setApiKeyDraft("");
+    } catch (e) {}
+  };
+
+  const persist = async (name, sid, roundsData) => {
+    try {
+      await window.storage.set(`session:${name}`, JSON.stringify({ sessionId: sid, rounds: roundsData }), false);
+      const list = Array.from(new Set([...savedNames, name]));
+      setSavedNames(list);
+      await window.storage.set("patient-index", JSON.stringify(list), false);
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    if (patientName && sessionId && rounds.length > 0) persist(patientName, sessionId, rounds);
+    // eslint-disable-next-line
+  }, [rounds]);
+
+  const activeRound = rounds.find((r) => r.id === activeRoundId) || null;
+
+  const updateActiveRound = (patch) => {
+    setRounds((prev) => prev.map((r) => (r.id === activeRoundId ? { ...r, ...patch } : r)));
+  };
+
+  // Autosave drafts so leaving mid-question and coming back restores exactly where you were.
+  useEffect(() => {
+    if (screen !== "opening" || !activeRoundId) return;
+    const t = setTimeout(() => updateActiveRound({ draftOpening: openingDraft }), 700);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line
+  }, [openingDraft]);
+
+  useEffect(() => {
+    if (screen !== "session" || !activeRound || activeRound.track !== "structured" || !currentStage) return;
+    const t = setTimeout(() => updateActiveRound({ draftStage: { stageIndex, stage: currentStage } }), 700);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line
+  }, [currentStage]);
+
+  useEffect(() => {
+    if (screen !== "session" || !activeRound || activeRound.track !== "live" || !liveProposal) return;
+    const t = setTimeout(() => updateActiveRound({ draftLive: liveProposal }), 700);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line
+  }, [liveProposal]);
+
+  useEffect(() => {
+    if (screen !== "summary" || !activeRound) return;
+    const t = setTimeout(() => updateActiveRound({ externalAIResponse: externalAI }), 700);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line
+  }, [externalAI]);
+
+  useEffect(() => {
+    if (screen === "summary" && activeRound) setExternalAI(activeRound.externalAIResponse || "");
+    // eslint-disable-next-line
+  }, [screen, activeRoundId]);
+
+  // ---------- setup / round choice ----------
+
+  const goToPatient = async (name) => {
+    setError("");
+    try {
+      const r = await window.storage.get(`session:${name}`, false);
+      if (r && r.value) {
+        const data = JSON.parse(r.value);
+        setPatientName(name);
+        setSessionId(data.sessionId || uid());
+        setRounds(data.rounds || []);
+        const last = (data.rounds || [])[data.rounds.length - 1];
+        if (last && !last.summary) {
+          setActiveRoundId(last.id);
+          setScreen("resumeChoice");
+        } else {
+          setScreen("roundChoice");
+        }
+        return;
+      }
+    } catch (e) {}
+    setPatientName(name);
+    setSessionId(uid());
+    setRounds([]);
+    setScreen("roundChoice");
+  };
+
+  const describeProgress = (round) => {
+    if (!round) return "";
+    if (!round.opening) return "עדיין לא נכתב סיפור הפתיחה";
+    if (!round.track) return "הפתיחה נכתבה, טרם נבחר מסלול";
+    if (round.track === "structured") {
+      const i = round.entries.length;
+      return i < STAGES.length ? `בתחנה ${i + 1} מתוך ${STAGES.length} - ${STAGES[i].label}` : "כל התחנות הושלמו, טרם הופק סיכום";
+    }
+    if (round.track === "live") return `${round.entries.length} שאלות נענו במסלול החי`;
+    return "";
+  };
+
+  const resumeInProgressRound = (round) => {
+    if (!round.opening) {
+      setOpeningDraft(round.draftOpening || "");
+      setScreen("opening");
+    } else if (!round.track) {
+      setScreen("trackChoice");
+    } else {
+      if (round.track === "structured") {
+        setStageIndex(round.entries.length);
+        setCurrentStage(round.draftStage && round.draftStage.stageIndex === round.entries.length ? round.draftStage.stage : null);
+      } else if (round.track === "live") {
+        setLiveProposal(round.draftLive || null);
+      }
+      setScreen("session");
+    }
+  };
+
+  const continueUnfinished = () => {
+    if (activeRound) resumeInProgressRound(activeRound);
+  };
+
+  const discardAndStartFresh = () => {
+    const staleId = activeRoundId;
+    setRounds((prev) => prev.filter((r) => r.id !== staleId));
+    startRound(null);
+  };
+
+  const startRound = (basedOn) => {
+    const round = { id: uid(), dateISO: new Date().toISOString(), basedOn: basedOn || null, opening: null, track: null, entries: [], summary: null };
+    setRounds((prev) => [...prev, round]);
+    setActiveRoundId(round.id);
+    setOpeningDraft("");
+    setStageIndex(0);
+    setCurrentStage(null);
+    setLiveProposal(null);
+    setScreen("opening");
+  };
+
+  const handleImportFile = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        if (parsed.type !== "gerein-hanose-round" || !parsed.summary) {
+          setError("קובץ לא תקין - זה לא קובץ סבב שיוצא מהכלי הזה.");
+          return;
+        }
+        setImportedRound(parsed);
+        setError("");
+      } catch (err) {
+        setError("לא הצלחתי לקרוא את הקובץ.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const continuityBlock = () => {
+    if (!activeRound || !activeRound.basedOn) return "";
+    const p = activeRound.basedOn.priorSummary;
+    if (!p) return "";
+    return `\nהקשר מסבב קודם (${activeRound.basedOn.label}) - להתייחס אליו כרקע להעמקה, לא לחזור עליו:
+גרעין נושא קודם: ${p.coreTheme}
+נקודות מהגלוי אל הסמוי: ${(p.fromVisibleToHidden || []).map((x) => `${x.label}: ${x.value}`).join(" | ")}
+נקודות מהסמוי אל הגלוי: ${(p.fromHiddenToVisible || []).map((x) => `${x.label}: ${x.value}`).join(" | ")}\n`;
+  };
+
+  // ---------- opening ----------
+
+  const commitOpening = () => {
+    if (!openingDraft.trim() || !activeRound) return;
+    updateActiveRound({ opening: { q: OPENING_Q, a: openingDraft.trim() }, draftOpening: null });
+    setScreen("trackChoice");
+  };
+
+  // ---------- track choice ----------
+
+  const chooseTrack = (track) => {
+    updateActiveRound({ track });
+    setStageIndex(0);
+    setCurrentStage(null);
+    setLiveProposal(null);
+    setScreen("session");
+    if (track === "live") {
+      // fetch first live question shortly after mount
+      setTimeout(() => fetchLiveQuestion(track === "live" ? [] : null), 50);
+    }
+  };
+
+  // ---------- structured track ----------
+
+  const beginStage = (stage) => {
+    setCurrentStage({
+      stageId: stage.id,
+      stageLabel: stage.label,
+      questions: stage.questions.map((q) => ({ id: uid(), text: q.text, thought: q.thought, answer: "" })),
+      showExample: true,
+      showTip: false,
+    });
+  };
+
+  useEffect(() => {
+    if (screen === "session" && activeRound && activeRound.track === "structured" && !currentStage && stageIndex < STAGES.length) {
+      beginStage(STAGES[stageIndex]);
+    }
+    // eslint-disable-next-line
+  }, [screen, stageIndex, activeRound?.track]);
+
+  const commitStage = () => {
+    if (!currentStage || !activeRound) return;
+    updateActiveRound({ entries: [...activeRound.entries, currentStage], draftStage: null });
+    setCurrentStage(null);
+    setStageIndex((i) => i + 1);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
+  };
+
+  const goBackOneStage = () => {
+    if (!activeRound || activeRound.entries.length === 0) return;
+    const entries = activeRound.entries;
+    const last = { ...entries[entries.length - 1], showExample: true };
+    updateActiveRound({ entries: entries.slice(0, -1), draftStage: null });
+    setCurrentStage(last);
+    setStageIndex(entries.length - 1);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
+  };
+
+  const updateStageField = (patch) => setCurrentStage((c) => ({ ...c, ...patch }));
+  const updateStageQuestion = (id, patch) =>
+    setCurrentStage((c) => ({ ...c, questions: c.questions.map((q) => (q.id === id ? { ...q, ...patch } : q)) }));
+
+  const askExample = async (text, onResult) => {
+    if (!aiUnlocked) {
+      setError("התכונה הזו דורשת חיבור AI. אפשר להפעיל אותה בהגדרות במסך הפתיחה.");
+      return;
+    }
+    setLoadingKey(`ex-${text}`);
+    setError("");
+    try {
+      const prompt = `שאלה טיפולית: "${text}"\nכתוב דוגמת תשובה אפשרית וקצרה (2-3 משפטים), בגוף ראשון, כאילו מטופל עונה בכנות וברגש גולמי. זו רק דוגמה להמחשה. החזר רק את הדוגמה.`;
+      const ex = await callClaude(apiKey, prompt, "את/ה עוזר למטפל להמחיש למטופל איך אפשר לענות על שאלה טיפולית, בסגנון ישיר וגולמי.");
+      onResult(ex);
+    } catch (e) {
+      setError("לא הצלחתי להביא דוגמה כרגע.");
+    } finally {
+      setLoadingKey(null);
+    }
+  };
+
+  const askWhy = async (text, onResult) => {
+    if (!aiUnlocked) {
+      setError("התכונה הזו דורשת חיבור AI. אפשר להפעיל אותה בהגדרות במסך הפתיחה.");
+      return;
+    }
+    setLoadingKey(`why-${text}`);
+    setError("");
+    try {
+      const prompt = `שאלה טיפולית: "${text}"\nהסבר בקצרה (2-3 משפטים) למה שואלים את השאלה הזו בתהליך חשיפת גרעין נושא בספירלת ההתפתחות האישית. פנה בגוף שני. החזר רק את ההסבר.`;
+      const why = await callClaude(apiKey, prompt, "את/ה מסביר בשפה חמה ופשוטה את מטרת השאלה הטיפולית.");
+      onResult(why);
+    } catch (e) {
+      setError("לא הצלחתי להביא הסבר כרגע.");
+    } finally {
+      setLoadingKey(null);
+    }
+  };
+
+  // ---------- live track ----------
+
+  const liveTranscriptContext = () => {
+    let out = `סיפור פתיחה:\n${activeRound.opening.a}\n\n`;
+    activeRound.entries.forEach((e) => (out += `שאלה: ${e.question}\nתשובה: ${e.answer}\n\n`));
+    return out;
+  };
+
+  const fetchLiveQuestion = async () => {
+    if (!activeRound) return;
+    if (!aiUnlocked) {
+      setError("המסלול החי דורש חיבור AI. אפשר להפעיל אותו בהגדרות במסך הפתיחה.");
+      return;
+    }
+    setLoadingKey("live-fetch");
+    setError("");
+    try {
+      const prompt = `את/ה מלווה תהליך חשיפת "גרעין נושא" בשיטת LTT (ספירלת ההתפתחות האישית). המסלול הרעיוני (לא חובה לעבור לפי הסדר, זו מפת התייחסות בלבד): תפישה עצמית, חוויה רגשית, אמונות ותגובה אוטומטית, הרגלים והתניות, סגנון חיים ולמידה רגשית, תפישת עולם אישית, בחירה חופשית ונרטיב חדש.
+
+השיחה עד כה:
+${liveTranscriptContext()}
+${continuityBlock()}
+מספר שאלות שנשאלו עד כה: ${activeRound.entries.length} (סה"כ יעד בסביבות ${LIVE_TARGET}).
+
+נסח שאלת המשך אחת, ממוקדת וטבעית, בעברית, שתעמיק בדיוק במה שעלה כרגע בתשובות - לא שאלה כללית. בחר את השכבה המתאימה ביותר לרגע הזה מתוך המפה הרעיונית. אם נראה שכבר יש מספיק חומר לגבש גרעין נושא, אפשר לנסח שאלה מסכמת/מחדדת. החזר רק את השאלה עצמה, בלי מספור ובלי הקדמה.`;
+      const q = await callClaude(apiKey, prompt, "את/ה מטפל מנוסה בשיטת LTT, שואל שאלה אחת בכל פעם מתוך הקשבה עמוקה למה שהמטופל בדיוק אמר.");
+      setLiveProposal({ text: q.replace(/^["'\-\d\.\)]+/, "").trim(), answer: "", revealed: false });
+    } catch (e) {
+      setError("לא הצלחתי ליצור שאלה כרגע. אפשר לנסות שוב.");
+    } finally {
+      setLoadingKey(null);
+    }
+  };
+
+  const commitLiveAnswer = () => {
+    if (!liveProposal || !liveProposal.answer.trim() || !activeRound) return;
+    const entry = { id: uid(), stageLabel: "שאלה חיה", question: liveProposal.text, answer: liveProposal.answer.trim(), source: "ai" };
+    const nextEntries = [...activeRound.entries, entry];
+    updateActiveRound({ entries: nextEntries, draftLive: null });
+    setLiveProposal(null);
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
+    if (nextEntries.length < LIVE_TARGET) {
+      setTimeout(() => fetchLiveQuestion(), 100);
+    }
+  };
+
+  const goBackLive = () => {
+    if (!activeRound || activeRound.entries.length === 0) return;
+    const entries = activeRound.entries;
+    const last = entries[entries.length - 1];
+    updateActiveRound({ entries: entries.slice(0, -1), draftLive: null });
+    setLiveProposal({ text: last.question, answer: last.answer });
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
+  };
+
+  // ---------- summary ----------
+
+  const generateSummary = async () => {
+    if (!activeRound) return;
+    if (!aiUnlocked) {
+      updateActiveRound({ summary: { manual: true } });
+      setScreen("summary");
+      return;
+    }
+    setSummaryLoading(true);
+    setError("");
+    try {
+      const transcript = roundTranscript(activeRound);
+      const hasContinuity = !!activeRound.basedOn;
+      const prompt = `להלן רצף שאלות ותשובות מתהליך חקירה טיפולי לפי מודל ספירלת ההתפתחות האישית (שיטת LTT), שנועד לחשוף את גרעין הנושא של המטופל בסיבוב הנוכחי:
+
+${transcript}
+${continuityBlock()}
+בהתבסס על החומר בלבד, החזר אך ורק JSON תקני (ללא טקסט נוסף, ללא Markdown) במבנה הבא:
+{
+  "coreTheme": "ניסוח קצר וממוקד (2-3 משפטים) של גרעין הנושא המרכזי שעולה מהחומר",
+  "fromVisibleToHidden": [
+    {"label": "מוטיב או סיטואציה חוזרת", "value": "..."},
+    {"label": "דפוס תגובה אוטומטי", "value": "..."},
+    {"label": "חוויה רגשית דומיננטית", "value": "..."},
+    {"label": "אמונה או תפישה מנטלית", "value": "..."},
+    {"label": "הגרעין המנטלי-רגשי המרכזי", "value": "..."}
+  ],
+  "fromHiddenToVisible": [
+    {"label": "נרטיב חדש אפשרי", "value": "..."},
+    {"label": "חוויה רגשית מתבקשת", "value": "..."},
+    {"label": "אמונה תומכת חדשה", "value": "..."},
+    {"label": "התנהגות או הרגל מוצע", "value": "..."},
+    {"label": "משמעות חדשה לביסוס", "value": "..."}
+  ]${hasContinuity ? ',\n  "refinementNote": "2-3 משפטים על מה זוקק, התבהר או השתנה ביחס לגרעין הנושא של הסבב הקודם"' : ""}
+}`;
+      const raw = await callClaude(apiKey, prompt, "את/ה מנתח קליני בשיטת LTT. אתה מחזיר אך ורק JSON תקני.");
+      const clean = raw.replace(/```json|```/g, "").trim();
+      const parsed = JSON.parse(clean);
+      updateActiveRound({ summary: parsed });
+      setScreen("summary");
+    } catch (e) {
+      setError("לא הצלחתי להפיק סיכום כרגע. אפשר לנסות שוב.");
+    } finally {
+      setSummaryLoading(false);
+    }
+  };
+
+  const fullText = (round) => {
+    let out = `גרעין הנושא - תיעוד סבב\nמטופל/ת: ${patientName}\nתאריך: ${fmtDate(round.dateISO)}\nמסלול: ${round.track === "structured" ? "מלא" : "חי"}\n`;
+    if (round.basedOn) out += `מבוסס על: ${round.basedOn.label}\n`;
+    out += `\n` + roundTranscript(round);
+    if (round.summary && round.summary.manual) {
+      out += `\n(סיכום AI לא הופק - מסלול ללא חיבור AI)\n`;
+    } else if (round.summary) {
+      out += `\n=== גרעין הנושא ===\n${round.summary.coreTheme}\n\n`;
+      if (round.summary.refinementNote) out += `--- זיקוק ביחס לסבב הקודם ---\n${round.summary.refinementNote}\n\n`;
+      out += `--- מהגלוי אל הסמוי ---\n`;
+      round.summary.fromVisibleToHidden.forEach((r) => (out += `${r.label}: ${r.value}\n`));
+      out += `\n--- מהסמוי אל הגלוי ---\n`;
+      round.summary.fromHiddenToVisible.forEach((r) => (out += `${r.label}: ${r.value}\n`));
+    }
+    out += `\n\n${AI_INSTRUCTIONS_TEXT}\n`;
+    return out;
+  };
+
+  const buildAIHandoffText = (round) => {
+    const continuityPart = round.basedOn && round.basedOn.priorSummary
+      ? `\nהקשר מסבב קודם (${round.basedOn.label}) - להתייחס אליו כרקע להעמקה, לא לחזור עליו:\nגרעין נושא קודם: ${round.basedOn.priorSummary.coreTheme}\n`
+      : "";
+    return `את/ה מוזמן/ת ללוות אותי בתהליך אישי ומשמעותי של חקר עצמי, לפי מודל "ספירלת ההתפתחות האישית" (שיטת LTT).
+
+ההנחה שעליה מבוסס התהליך: אנחנו נשמה שבאה לגוף אנושי כדי להתפתח ולהתקדם למדרגות הבאות, מתוך מפגש חוזר עם נושאים שעליה עדיין לפתור. בכל מפגש כזה עם אותו נושא - ההבנה יכולה להעמיק ולעלות למדרגה חדשה, ולא לחזור על אותה תגובה הרגלית שנבנתה במשך כל החיים.
+
+למטה מצורף רצף שאלות ותשובות שמיפה מצב או דפוס חוזר בחיי, לאורך שמונה תחנות: תפישה עצמית, חוויה רגשית, אמונות ותגובה אוטומטית, הרגלים והתניות, סגנון חיים, תפישת עולם אישית, בחירה חופשית, ואסטרטגיה למפגש הבא.
+
+חשוב מאוד - זו לא בקשה לניתוח מיידי משולחן העבודה, על סמך הטקסט הכתוב בלבד. התפקיד שלך הוא בשני שלבים, ובסדר הזה:
+
+שלב 1 - שיחה משמעותית ומעמיקה. קרא/י את החומר, ואז נהל/י איתי דיאלוג אמיתי: שאל/י שאלות המשך, בקש/י דוגמאות נוספות, בדוק/י הבנות שנשמעות לא שלמות, אתגר/י בעדינות מקומות שבהם אני חוזר/ת על עצמי או נשמע/ת שטחי/ת. אל תמהר/י לסכם. המטרה של השלב הזה היא להגיע ביחד, דרך שיחה של ממש ואיסוף מידע נוסף ממני, להבנות בנויות ומדויקות - לא רק לשקף את מה שכבר כתוב.
+
+שלב 2 - התוצר, ורק לאחר שיחה כזו:
+1. גרעין הנושא - ניסוח שמתעדכן ומתחדד תוך כדי השיחה בינינו, לא רק מהטקסט המקורי.
+2. אסטרטגיה קונקרטית למפגש הבא עם הנושא - לא תובנה כללית, אלא כלים מעשיים שנבנה יחד בשיחה: איך לזהות את הרגע המוקדם, מה לעשות אחרת ברגע שהוא קורה, איך לתרגל את זה מראש בעוצמה נמוכה, מי יכול לתמוך, ואיך לחזור לגישה החדשה גם אחרי נפילה חזרה לדפוס הישן. האסטרטגיה צריכה להיבנות יחד איתי בדיאלוג - לא להיות הצעה חד-צדדית שלך.
+3. אם זה רלוונטי לי - אני עשוי/ה להיות בהכנה לקראת פגישת חניכה או מפגש טיפולי, ורוצה לגבש ניסוח מדויק וממוקד של "הנושא לחקירה" שאביא איתי לשם. אם זה עולה בשיחה - עזור/י לי לנסח את זה בבירור, כתוצר נפרד וברור.
+
+דיוק בציטוט - חשוב: שים/י לב במיוחד למילות שלילה וסייג ("כבר לא", "לא עוד", "פעם היה כך אך כיום לא") בתשובות שלי. שמור/שמרי על המשמעות המדויקת שלהן - אל תהפוך/י אמירה על משהו שכבר לא קיים לאמירה על משהו שכן קיים, או ההפך. בכל ציטוט - בדוק/י פעמיים מול המקור.
+${continuityPart}
+להלן החומר המלא מהשאלון:
+
+${roundTranscript(round)}`;
+  };
+
+  const finishedRounds = rounds.filter((r) => r.summary);
+
+  const handleSwipeRight = () => {
+    if (screen !== "session" || !activeRound) return;
+    if (activeRound.track === "structured" && currentStage) commitStage();
+    else if (activeRound.track === "live" && liveProposal && liveProposal.answer.trim()) commitLiveAnswer();
+  };
+  const handleSwipeLeft = () => {
+    if (screen !== "session" || !activeRound) return;
+    if (activeRound.track === "structured") goBackOneStage();
+    else if (activeRound.track === "live") goBackLive();
+  };
+  const swipeHandlers = useSwipeNav(handleSwipeRight, handleSwipeLeft);
+
+  const globalFont = (
+    <style>{`@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Assistant:wght@400;500;600;700&display=swap');`}</style>
+  );
+
+  // ================= SCREENS =================
+
+  if (screen === "setup") {
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }}>
+        {globalFont}
+        <div className="max-w-md mx-auto px-6 py-10">
+          <div className="flex items-center gap-2 mb-1">
+            <SpiralMark />
+            <span className="text-xs tracking-widest" style={{ color: "#A98B4E" }}>LOUHARYA · LTT</span>
+          </div>
+          <h1 style={{ fontFamily: "'Frank Ruhl Libre', serif" }} className="text-3xl mt-3 mb-2 leading-tight">גרעין הנושא</h1>
+          <p className="text-sm opacity-70 mb-8 leading-relaxed">מחוויית חיים ועד לזיקוק הגרעין - צעד אחר צעד, סבב אחר סבב.</p>
+
+          <ThreadDivider />
+
+          {error && <div className="mt-4 text-xs rounded-lg px-3 py-2" style={{ background: "#F6DCD3", color: "#8A3E24" }}>{error}</div>}
+
+          <div className="mt-8">
+            <label className="text-sm font-medium mb-2 block">שם (או כינוי) - שלך או של המטופל/ת</label>
+            <div className="flex items-center gap-2 rounded-xl px-3 py-2.5" style={cardStyle}>
+              <User size={16} style={{ color: "#A98B4E" }} />
+              <input value={patientName} onChange={(e) => setPatientName(e.target.value)} placeholder="לדוגמה: מ. או 'ניתוח עצמי'" className="flex-1 bg-transparent outline-none text-sm" />
+            </div>
+            <button
+              onClick={() => patientName.trim() && goToPatient(patientName.trim())}
+              disabled={!patientName.trim()}
+              className="w-full mt-3 rounded-xl py-3 text-sm font-medium transition"
+              style={{ background: patientName.trim() ? "#BE7350" : "#E3D5C0", color: "#FBF6EE", cursor: patientName.trim() ? "pointer" : "not-allowed" }}
+            >
+              המשך/י
+            </button>
+          </div>
+
+          {savedNames.length > 0 && (
+            <div className="mt-8">
+              <div className="text-sm font-medium mb-2 opacity-70">תהליכים קיימים</div>
+              <div className="flex flex-col gap-2">
+                {savedNames.map((n) => (
+                  <button key={n} onClick={() => goToPatient(n)} className="text-right rounded-xl px-4 py-3 text-sm flex items-center justify-between" style={cardStyle}>
+                    <span>{n}</span>
+                    <ChevronLeft size={16} style={{ color: "#A98B4E" }} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-10">
+            <ThreadDivider />
+            <div className="text-sm font-medium mt-4 mb-2 opacity-70">כל השאלות, ריק</div>
+            <p className="text-xs opacity-60 mb-3 leading-relaxed">מסמך עם כל 8 התחנות ושאלותיהן, בלי תשובות - שימושי למי שמעדיף לעבור על השאלות בעל פה בשיחה, לא להקליד ישירות לכלי.</p>
+            <DocxDownloadButton primary label="הורד/י כקובץ Word (docx)" title="גרעין הנושא - שאלון מלא" buildBlocks={questionnaireDocxBlocks} filename="גרעין-הנושא-שאלון-ריק.docx" />
+            <ExportBlock label="הצג/י והורד/י כטקסט" icon={FileText} getText={buildBlankQuestionnaire} filename="gerein-hanose-שאלון-ריק.txt" />
+          </div>
+
+          <div className="mt-10">
+            <ThreadDivider />
+            <div className="text-sm font-medium mt-4 mb-2 opacity-70">ייבוא סבב מקובץ</div>
+            <p className="text-xs opacity-60 mb-3 leading-relaxed">אפשר לייבא קובץ סיכום סבב ששמרת קודם, כדי להמשיך ממנו בהמשכיות.</p>
+            <input ref={fileInputRef} type="file" accept="application/json,.json" onChange={handleImportFile} className="hidden" />
+            <button onClick={() => fileInputRef.current?.click()} className="w-full rounded-xl py-2.5 text-sm flex items-center justify-center gap-2" style={cardStyle}>
+              <Upload size={15} style={{ color: "#A98B4E" }} /> בחר/י קובץ סבב (JSON)
+            </button>
+            {importedRound && (
+              <div className="mt-3 rounded-xl px-4 py-3" style={{ background: "#EFE6D6" }}>
+                <div className="text-xs font-medium mb-1" style={{ color: "#A98B4E" }}>יובא: {importedRound.patientName} · {fmtDate(importedRound.dateISO)}</div>
+                <div className="text-xs leading-relaxed opacity-80">{importedRound.summary?.coreTheme}</div>
+                <div className="text-[11px] opacity-60 mt-1">אפשר להשתמש בזה כבסיס בעמוד הבא.</div>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-10">
+            <ThreadDivider />
+            {!showSettings ? (
+              <div className="text-center mt-6">
+                <button onClick={revealAdvanced} className="text-[11px] opacity-30">אפשרויות מתקדמות</button>
+              </div>
+            ) : (
+              <>
+                <div className="text-sm font-medium mt-4 mb-2 opacity-70">חיבור AI (למשתמשים מתקדמים)</div>
+                <p className="text-xs opacity-60 mb-3 leading-relaxed">
+                  שימוש ב-AI (מסלול חי, דוגמאות, וגיבוש אוטומטי של גרעין הנושא) מצריך הטמעת מפתח API אישי מ-Anthropic. בלי מפתח, הכלי עדיין עובד במלואו במסלול המלא, כולל ייצוא תיעוד מסודר - רק בלי ניתוח אוטומטי.
+                </p>
+                <div className="rounded-xl px-4 py-3" style={cardStyle}>
+                  <label className="text-xs font-medium mb-1 block opacity-70">מפתח API של Anthropic</label>
+                  <input
+                    type="password"
+                    value={apiKeyDraft}
+                    onChange={(e) => setApiKeyDraft(e.target.value)}
+                    placeholder="sk-ant-..."
+                    className="w-full rounded-lg px-3 py-2 text-sm outline-none mb-3"
+                    style={{ background: "#FAF6EF", border: "1px solid #EEE3D0", direction: "ltr", textAlign: "left" }}
+                  />
+                  <div className="flex gap-2">
+                    <button onClick={saveApiKey} disabled={!apiKeyDraft.trim()} className="flex-1 rounded-lg py-2 text-xs font-medium" style={{ background: apiKeyDraft.trim() ? "#3A332B" : "#E3D5C0", color: "#F2E9DC" }}>
+                      {settingsSaved ? "נשמר!" : "שמור/י והפעל/י"}
+                    </button>
+                    {apiKey && (
+                      <button onClick={clearApiKey} className="rounded-lg py-2 px-3 text-xs" style={{ background: "#F6DCD3", color: "#8A3E24" }}>נתק/י</button>
+                    )}
+                  </div>
+                  <div className="text-[11px] opacity-50 mt-2 leading-relaxed">המפתח נשמר במכשיר שלך בלבד ומשמש רק לקריאות ישירות ל-Anthropic API.</div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "roundChoice") {
+    const lastRound = finishedRounds[finishedRounds.length - 1];
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }}>
+        {globalFont}
+        <div className="sticky top-0 z-10 px-5 py-3 flex items-center justify-between" style={{ background: "#F2E9DCee", borderBottom: "1px solid #E3D5C0" }}>
+          <button onClick={() => setScreen("setup")} className="flex items-center gap-1 text-xs opacity-70"><ChevronRight size={14} /> חזרה</button>
+          <div className="text-sm font-medium">{patientName}</div>
+        </div>
+        <div className="max-w-md mx-auto px-5 py-6">
+          <h2 style={{ fontFamily: "'Frank Ruhl Libre', serif" }} className="text-xl mb-1">איך מתחילים את הסבב הזה?</h2>
+          <p className="text-xs opacity-60 mb-6 leading-relaxed">אפשר להתחיל מדף חלק, או להמשיך ולהעמיק מתוך סבב קודם.</p>
+
+          <SpiralOverview rounds={rounds} />
+
+          <button onClick={() => startRound(null)} className="w-full text-right rounded-xl px-4 py-4 mb-3 flex items-center justify-between" style={cardStyle}>
+            <div>
+              <div className="text-sm font-medium mb-0.5">דף חלק</div>
+              <div className="text-xs opacity-60">סבב חדש לגמרי, ללא הקשר מסבבים קודמים</div>
+            </div>
+            <FileText size={18} style={{ color: "#A98B4E" }} />
+          </button>
+
+          {!lastRound && !importedRound && (
+            <button onClick={() => setScreen("setup")} className="w-full text-right rounded-xl px-4 py-3 mb-3 text-xs opacity-60 flex items-center justify-between" style={cardStyle}>
+              <span>יש לך סבב קודם שמור כקובץ? חזור/י למסך הקודם וייבא/י אותו משם</span>
+              <ChevronLeft size={14} style={{ color: "#A98B4E" }} />
+            </button>
+          )}
+
+          {lastRound && (
+            <button onClick={() => startRound({ source: "previous", label: `סבב מ-${fmtDate(lastRound.dateISO)}`, priorSummary: lastRound.summary, parentRoundId: lastRound.id })} className="w-full text-right rounded-xl px-4 py-4 mb-3" style={{ ...cardStyle, borderColor: "#BE7350" }}>
+              <div className="flex items-center justify-between mb-1">
+                <div className="text-sm font-medium">המשך מהסבב האחרון</div>
+                <ArrowUpRight size={17} style={{ color: "#BE7350" }} />
+              </div>
+              <div className="text-xs opacity-60 mb-2">{fmtDate(lastRound.dateISO)}</div>
+              <div className="text-xs leading-relaxed" style={{ color: "#5B5548" }}>{lastRound.summary.coreTheme}</div>
+            </button>
+          )}
+
+          {importedRound && (
+            <button onClick={() => startRound({ source: "imported", label: `קובץ מיובא (${fmtDate(importedRound.dateISO)})`, priorSummary: importedRound.summary })} className="w-full text-right rounded-xl px-4 py-4 mb-3" style={{ ...cardStyle, borderColor: "#8FA793" }}>
+              <div className="flex items-center justify-between mb-1">
+                <div className="text-sm font-medium">המשך מהקובץ שיובא</div>
+                <Upload size={16} style={{ color: "#8FA793" }} />
+              </div>
+              <div className="text-xs opacity-60 mb-2">{importedRound.patientName} · {fmtDate(importedRound.dateISO)}</div>
+              <div className="text-xs leading-relaxed" style={{ color: "#5B5548" }}>{importedRound.summary?.coreTheme}</div>
+            </button>
+          )}
+
+          {finishedRounds.length > 0 && (
+            <div className="mt-6">
+              <button onClick={() => setShowHistory((s) => !s)} className="text-xs flex items-center gap-1 opacity-70 mb-3">
+                <History size={13} /> {showHistory ? "הסתר/י" : "הצג/י"} את כל הסבבים הקודמים ({finishedRounds.length})
+              </button>
+              {showHistory && (
+                <div className="flex flex-col gap-2">
+                  {finishedRounds.map((r) => (
+                    <div key={r.id} className="rounded-xl px-4 py-3" style={cardStyle}>
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs font-medium">{fmtDate(r.dateISO)}</div>
+                        <button onClick={() => downloadJSON(buildRoundExport(patientName, r), `gerein-${patientName}-${fmtDate(r.dateISO)}.json`)} className="text-[11px] flex items-center gap-1 opacity-70">
+                          <FileDown size={12} /> הורד/י
+                        </button>
+                      </div>
+                      <div className="text-xs opacity-70 mt-1 leading-relaxed">{r.summary.coreTheme}</div>
+                      <button onClick={() => startRound({ source: "previous", label: `סבב מ-${fmtDate(r.dateISO)}`, priorSummary: r.summary, parentRoundId: r.id })} className="text-[11px] mt-2" style={{ color: "#BE7350" }}>
+                        השתמש/י כבסיס לסבב חדש ←
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "resumeChoice" && activeRound) {
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }}>
+        {globalFont}
+        <div className="max-w-md mx-auto px-6 py-10">
+          <div className="flex items-center gap-2 mb-1">
+            <SpiralMark />
+            <span className="text-xs tracking-widest" style={{ color: "#A98B4E" }}>{patientName}</span>
+          </div>
+          <h1 style={{ fontFamily: "'Frank Ruhl Libre', serif" }} className="text-2xl mt-3 mb-2 leading-tight">יש כאן סבב פתוח</h1>
+          <p className="text-sm opacity-70 mb-8 leading-relaxed">{describeProgress(activeRound)}. אפשר להמשיך בדיוק מכאן, או להתחיל דף חלק - מה שהיה במילוי הפתוח יימחק.</p>
+
+          <button onClick={continueUnfinished} className="w-full text-right rounded-xl px-5 py-5 mb-3" style={{ ...cardStyle, borderColor: "#BE7350" }}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="text-base font-medium">המשך/י מאיפה שהפסקת</div>
+              <ArrowUpRight size={18} style={{ color: "#BE7350" }} />
+            </div>
+            <div className="text-xs opacity-60">כל מה שכבר נכתב יחכה לך, בדיוק כמו שהשארת אותו.</div>
+          </button>
+
+          <button onClick={discardAndStartFresh} className="w-full text-right rounded-xl px-5 py-5" style={cardStyle}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="text-base font-medium">התחל/י דף חלק</div>
+              <FileText size={18} style={{ color: "#A98B4E" }} />
+            </div>
+            <div className="text-xs opacity-60">המילוי הפתוח הנוכחי יימחק, ותתחיל/י סבב חדש לגמרי.</div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "opening" && activeRound) {
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }}>
+        {globalFont}
+        <div className="sticky top-0 z-10 px-5 py-3 flex items-center justify-between" style={{ background: "#F2E9DCee", borderBottom: "1px solid #E3D5C0" }}>
+          <button onClick={() => setScreen("roundChoice")} className="flex items-center gap-1 text-xs opacity-70"><ChevronRight size={14} /> חזרה</button>
+          <div className="text-sm font-medium">{patientName}</div>
+        </div>
+        <div className="max-w-md mx-auto px-5 py-8">
+          {activeRound.basedOn && (
+            <div className="mb-6 rounded-xl px-4 py-3 flex items-start gap-2" style={{ background: "#EFE6D6" }}>
+              <ArrowUpRight size={15} style={{ color: "#A98B4E", marginTop: 2 }} />
+              <div>
+                <div className="text-xs font-medium" style={{ color: "#A98B4E" }}>ממשיכ/ים את: {activeRound.basedOn.label}</div>
+                <div className="text-xs opacity-70 mt-1 leading-relaxed">{activeRound.basedOn.priorSummary?.coreTheme}</div>
+              </div>
+            </div>
+          )}
+          <div className="flex items-center gap-2 mb-3">
+            <SpiralMark size={26} />
+            <span className="text-xs tracking-widest" style={{ color: "#A98B4E" }}>נקודת הפתיחה</span>
+          </div>
+          <h2 style={{ fontFamily: "'Frank Ruhl Libre', serif" }} className="text-xl leading-relaxed mb-6">{OPENING_Q}</h2>
+          <textarea
+            value={openingDraft}
+            onChange={(e) => setOpeningDraft(e.target.value)}
+            rows={7}
+            placeholder="כתוב/כתבי בחופשיות..."
+            className="w-full rounded-xl px-4 py-3 text-sm outline-none leading-relaxed"
+            style={cardStyle}
+          />
+          <button
+            onClick={commitOpening}
+            disabled={!openingDraft.trim()}
+            className="w-full mt-4 rounded-xl py-3 text-sm font-medium"
+            style={{ background: openingDraft.trim() ? "#3A332B" : "#E3D5C0", color: "#F2E9DC" }}
+          >
+            המשך/י לבחירת מסלול
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "trackChoice" && activeRound) {
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }}>
+        {globalFont}
+        <div className="sticky top-0 z-10 px-5 py-3 flex items-center justify-between" style={{ background: "#F2E9DCee", borderBottom: "1px solid #E3D5C0" }}>
+          <button onClick={() => setScreen("opening")} className="flex items-center gap-1 text-xs opacity-70"><ChevronRight size={14} /> חזרה</button>
+          <div className="text-sm font-medium">{patientName}</div>
+        </div>
+        <div className="max-w-md mx-auto px-5 py-8">
+          <h2 style={{ fontFamily: "'Frank Ruhl Libre', serif" }} className="text-xl mb-1">איך ממשיכים מכאן?</h2>
+          <p className="text-xs opacity-60 mb-6 leading-relaxed">
+            {aiUnlocked ? "שני המסלולים ממשיכים מהסיפור שכתבת, בדרך אל גרעין הנושא." : "הרצף הבא ממשיך מהסיפור שכתבת, בדרך אל גרעין הנושא."}
+          </p>
+
+          <button onClick={() => chooseTrack("structured")} className="w-full text-right rounded-xl px-5 py-5 mb-4" style={{ ...cardStyle, borderColor: "#8FA793" }}>
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-base font-medium">המסלול המלא</div>
+              <Route size={20} style={{ color: "#8FA793" }} />
+            </div>
+            <div className="text-xs opacity-70 leading-relaxed">
+              רצף קבוע של 8 תחנות - תפישה עצמית, חוויה רגשית, אמונות ותגובות, הרגלים, סגנון חיים, תפישת עולם, בחירה חופשית, ואסטרטגיה למפגש הבא - עד לגרעין הנושא וכלים ממשיים לפעם הבאה.
+            </div>
+          </button>
+
+          {aiUnlocked && (
+            <button onClick={() => chooseTrack("live")} className="w-full text-right rounded-xl px-5 py-5" style={{ ...cardStyle, borderColor: "#BE7350" }}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-base font-medium">המסלול החי</div>
+                <Zap size={20} style={{ color: "#BE7350" }} />
+              </div>
+              <div className="text-xs opacity-70 leading-relaxed">
+                כ-{LIVE_TARGET} שאלות, כל אחת נולדת מתוך התשובה הקודמת. את/ה רואה כל שאלה שה-AI מציע ויכול/ה לערוך או לדלג לפני שהיא מוצגת.
+              </div>
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "session" && activeRound && activeRound.track === "structured") {
+    const stage = STAGES[stageIndex];
+    const done = stageIndex >= STAGES.length;
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }} {...swipeHandlers}>
+        {globalFont}
+        <div className="sticky top-0 z-10 px-5 py-3 flex items-center justify-between" style={{ background: "#F2E9DCee", borderBottom: "1px solid #E3D5C0" }}>
+          <button onClick={() => setScreen("setup")} className="flex items-center gap-1 text-xs opacity-70"><ChevronRight size={14} /> החלף/י</button>
+          <div className="text-sm font-medium">{patientName}</div>
+          <div className="text-xs opacity-50">{Math.min(stageIndex + 1, STAGES.length)}/{STAGES.length}</div>
+        </div>
+        <div className="max-w-md mx-auto px-5 py-6 pb-28">
+          {error && <div className="mb-4 text-xs rounded-lg px-3 py-2" style={{ background: "#F6DCD3", color: "#8A3E24" }}>{error}</div>}
+
+          <div className="mb-6">
+            <KnotThread total={STAGES.length} currentIndex={stageIndex} />
+          </div>
+
+          {done ? (
+            <div className="text-center py-10">
+              <div className="mb-4 text-sm opacity-70">עברת את כל שמונה התחנות.</div>
+              <button onClick={generateSummary} disabled={summaryLoading} className="w-full rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2" style={{ background: "#3A332B", color: "#F2E9DC" }}>
+                {summaryLoading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                {aiUnlocked ? "הפק/י סיכום וגרעין הנושא" : "סיים/י וייצא/י תיעוד"}
+              </button>
+              {activeRound.entries.length > 0 && (
+                <button onClick={goBackOneStage} className="w-full mt-3 rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2" style={cardStyle}>
+                  <ChevronRight size={15} /> חזרה לתחנה האחרונה
+                </button>
+              )}
+            </div>
+          ) : currentStage ? (
+            <div>
+              <div className="text-xs font-medium mb-2" style={{ color: "#8FA793" }}>{stage.label}</div>
+              <p className="text-sm leading-relaxed mb-4" style={{ color: "#5B5548" }}>{stage.knot}</p>
+
+              <div className="mb-6">
+                <button onClick={() => updateStageField({ showExample: !currentStage.showExample })} className="text-xs flex items-center gap-1 mb-2" style={{ color: "#5B5548", opacity: 0.75 }}>
+                  <Sparkles size={12} /> {currentStage.showExample ? "הסתר/י דוגמה" : "הצג/י דוגמה"}
+                </button>
+                {currentStage.showExample && (
+                  <div className="text-xs rounded-lg px-3 py-2.5 leading-relaxed" style={{ background: "#F3F0E6", color: "#5B5548" }}><b>דוגמה: </b>{stage.example}</div>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-5">
+                {currentStage.questions.map((q, i) => (
+                  <div key={q.id} className="rounded-xl px-4 py-3" style={cardStyle}>
+                    <div className="text-sm font-medium leading-relaxed"><span className="opacity-40 text-xs">{i + 1}. </span>{q.text}</div>
+                    {q.thought && <div className="text-xs mt-1 opacity-55 leading-relaxed">💭 {q.thought}</div>}
+                    <textarea value={q.answer} onChange={(e) => updateStageQuestion(q.id, { answer: e.target.value })} rows={2} placeholder="תשובה..." className="w-full mt-2 rounded-lg px-2.5 py-2 text-sm outline-none" style={{ background: "#FAF6EF", border: "1px solid #EEE3D0" }} />
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5">
+                <button onClick={() => updateStageField({ showTip: !currentStage.showTip })} className="w-full text-xs rounded-lg py-2 flex items-center justify-center gap-1" style={{ background: "#EFE6E4", color: "#5B5548" }}>
+                  <HelpCircle size={12} /> {currentStage.showTip ? "הסתר/י המלצה" : "הצג/י המלצה"}
+                </button>
+              </div>
+              {currentStage.showTip && (
+                <div className="text-xs mt-2 rounded-lg px-3 py-2.5 leading-relaxed" style={{ background: "#EFE6E4", color: "#5B5548" }}><b>המלצה: </b>{stage.tip}</div>
+              )}
+
+              <div className="flex gap-2 mt-8">
+                <button onClick={goBackOneStage} disabled={activeRound.entries.length === 0} className="rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-1" style={activeRound.entries.length === 0 ? { ...cardStyle, opacity: 0.4 } : cardStyle}>
+                  <ChevronRight size={16} /> תחנה קודמת
+                </button>
+                <button onClick={commitStage} className="flex-1 rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-1" style={{ background: "#8FA793", color: "#fff" }}>
+                  {stageIndex === STAGES.length - 1 ? "סיים/י תחנה אחרונה" : "תחנה הבאה"} <ChevronLeft size={16} />
+                </button>
+              </div>
+            </div>
+          ) : null}
+          <div ref={bottomRef} />
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "session" && activeRound && activeRound.track === "live" && !aiUnlocked) {
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }}>
+        {globalFont}
+        <div className="max-w-md mx-auto px-6 py-10 text-center">
+          <div className="text-sm opacity-70 mb-4">המסלול החי דורש חיבור AI שאינו מחובר כרגע.</div>
+          <button onClick={() => setScreen("setup")} className="rounded-xl py-3 px-6 text-sm font-medium" style={{ background: "#3A332B", color: "#F2E9DC" }}>לחיבור AI במסך הפתיחה</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "session" && activeRound && activeRound.track === "live") {
+    const count = activeRound.entries.length;
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }} {...swipeHandlers}>
+        {globalFont}
+        <div className="sticky top-0 z-10 px-5 py-3 flex items-center justify-between" style={{ background: "#F2E9DCee", borderBottom: "1px solid #E3D5C0" }}>
+          <button onClick={() => setScreen("setup")} className="flex items-center gap-1 text-xs opacity-70"><ChevronRight size={14} /> החלף/י</button>
+          <div className="text-sm font-medium">{patientName}</div>
+          <div className="text-xs opacity-50">{count}/{LIVE_TARGET}</div>
+        </div>
+        <div className="max-w-md mx-auto px-5 py-6 pb-28">
+          {error && <div className="mb-4 text-xs rounded-lg px-3 py-2" style={{ background: "#F6DCD3", color: "#8A3E24" }}>{error}</div>}
+
+          {activeRound.entries.length > 0 && (
+            <div className="mb-6 flex flex-col gap-2">
+              {activeRound.entries.map((e) => (
+                <div key={e.id} className="rounded-xl px-4 py-3" style={cardStyle}>
+                  <div className="text-xs font-medium mb-1" style={{ color: "#BE7350" }}>{e.question}</div>
+                  <div className="text-xs opacity-70 leading-relaxed">{e.answer}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {count >= LIVE_TARGET && !liveProposal ? (
+            <button onClick={generateSummary} disabled={summaryLoading} className="w-full rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2" style={{ background: "#3A332B", color: "#F2E9DC" }}>
+              {summaryLoading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />} הפק/י סיכום וגרעין הנושא
+            </button>
+          ) : liveProposal ? (
+            <div className="rounded-xl px-4 py-4" style={{ ...cardStyle, borderColor: "#BE7350" }}>
+              <div className="text-xs font-medium mb-2" style={{ color: "#BE7350" }}>שאלה מוצעת · אפשר לערוך</div>
+              <textarea value={liveProposal.text} onChange={(e) => setLiveProposal((p) => ({ ...p, text: e.target.value }))} rows={2} className="w-full rounded-lg px-3 py-2 text-sm outline-none mb-2" style={{ background: "#FAF6EF", border: "1px solid #EEE3D0" }} />
+              <div className="flex gap-2 mb-4">
+                <button onClick={() => fetchLiveQuestion()} disabled={loadingKey === "live-fetch"} className="text-xs flex items-center gap-1 opacity-70">
+                  {loadingKey === "live-fetch" ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />} שאלה אחרת
+                </button>
+                <button onClick={() => askExample(liveProposal.text, (ex) => setLiveProposal((p) => ({ ...p, example: ex })))} className="text-xs flex items-center gap-1 opacity-70">
+                  {loadingKey === `ex-${liveProposal.text}` ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} דוגמה
+                </button>
+                <button onClick={() => askWhy(liveProposal.text, (why) => setLiveProposal((p) => ({ ...p, why })))} className="text-xs flex items-center gap-1 opacity-70">
+                  {loadingKey === `why-${liveProposal.text}` ? <Loader2 size={12} className="animate-spin" /> : <HelpCircle size={12} />} למה שואלים?
+                </button>
+              </div>
+              {liveProposal.example && <div className="text-xs mb-3 rounded-lg px-2.5 py-2 leading-relaxed" style={{ background: "#F3F0E6", color: "#5B5548" }}><b>דוגמה: </b>{liveProposal.example}</div>}
+              {liveProposal.why && <div className="text-xs mb-3 rounded-lg px-2.5 py-2 leading-relaxed" style={{ background: "#EFE6E4", color: "#5B5548" }}><b>המטרה: </b>{liveProposal.why}</div>}
+
+              <div className="text-xs font-medium mb-2 opacity-70">התשובה</div>
+              <textarea value={liveProposal.answer} onChange={(e) => setLiveProposal((p) => ({ ...p, answer: e.target.value }))} rows={3} placeholder="הקלד/י את התשובה כאן..." className="w-full rounded-lg px-3 py-2 text-sm outline-none" style={{ background: "#FAF6EF", border: "1px solid #EEE3D0" }} />
+
+              <button onClick={commitLiveAnswer} disabled={!liveProposal.answer.trim()} className="w-full mt-4 rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-1" style={{ background: liveProposal.answer.trim() ? "#BE7350" : "#E3D5C0", color: "#fff" }}>
+                שמור/י והמשך/י <ChevronLeft size={16} />
+              </button>
+              {activeRound.entries.length > 0 && (
+                <button onClick={goBackLive} className="w-full mt-2 rounded-xl py-2.5 text-sm font-medium flex items-center justify-center gap-1" style={cardStyle}>
+                  <ChevronRight size={15} /> שאלה קודמת
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-10 flex flex-col items-center gap-3">
+              <Loader2 size={20} className="animate-spin" style={{ color: "#BE7350" }} />
+              <div className="text-xs opacity-60">חושב/ת על השאלה הבאה...</div>
+              {activeRound.entries.length > 0 && (
+                <button onClick={goBackLive} className="rounded-xl px-4 py-2 text-xs font-medium flex items-center gap-1" style={cardStyle}>
+                  <ChevronRight size={14} /> שאלה קודמת
+                </button>
+              )}
+            </div>
+          )}
+
+          {count > 0 && count < LIVE_TARGET && (
+            <button onClick={generateSummary} disabled={summaryLoading} className="w-full mt-6 text-xs opacity-60 underline">
+              סיים/י כאן ועבור/י לסיכום ({count} שאלות)
+            </button>
+          )}
+          <div ref={bottomRef} />
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "summary" && activeRound && activeRound.summary) {
+    const summary = activeRound.summary;
+    const isManual = !!summary.manual;
+    return (
+      <div dir="rtl" style={{ fontFamily: "'Assistant', sans-serif", background: "#F2E9DC", minHeight: "100vh", color: "#3A332B" }}>
+        {globalFont}
+        <div className="sticky top-0 z-10 px-5 py-3 flex items-center justify-between" style={{ background: "#F2E9DCee", borderBottom: "1px solid #E3D5C0" }}>
+          <button onClick={() => setScreen("setup")} className="flex items-center gap-1 text-xs opacity-70"><ChevronRight size={14} /> תפריט</button>
+          <div className="text-sm font-medium">{patientName}</div>
+        </div>
+        <div className="max-w-md mx-auto px-5 py-6 pb-16">
+          <div className="flex items-center gap-2 mb-2">
+            <SpiralMark size={26} />
+            <span className="text-xs tracking-widest" style={{ color: "#A98B4E" }}>{isManual ? "תיעוד הסבב" : "גרעין הנושא"} · {fmtDate(activeRound.dateISO)}</span>
+          </div>
+
+          {isManual ? (
+            <>
+              <div className="rounded-xl px-4 py-3 mb-6" style={{ background: "#EFE6D6" }}>
+                <div className="text-xs leading-relaxed" style={{ color: "#5B5548" }}>
+                  הסבב הזה נשמר בלי ניתוח AI (אין חיבור פעיל). כל השאלות והתשובות נשמרו במלואן - וברגע שיחובר מפתח AI בהגדרות, אפשר יהיה להריץ עליו סיכום וגיבוש גרעין נושא.
+                </div>
+              </div>
+              <ThreadDivider />
+              <div className="mt-6 mb-2 text-sm font-medium opacity-70">רצף השאלות והתשובות</div>
+              <div className="flex flex-col gap-2 mb-8">
+                {activeRound.opening && (
+                  <div className="rounded-xl px-4 py-3" style={cardStyle}>
+                    <div className="text-xs font-medium mb-1" style={{ color: "#BE7350" }}>פתיחה</div>
+                    <div className="text-sm leading-relaxed">{activeRound.opening.a}</div>
+                  </div>
+                )}
+                {activeRound.entries.map((e) => (
+                  <div key={e.id} className="rounded-xl px-4 py-3" style={cardStyle}>
+                    <div className="text-xs font-medium mb-2" style={{ color: "#8FA793" }}>{e.stageLabel}</div>
+                    {e.questions ? (
+                      e.questions.map((q) => (
+                        <div key={q.id} className="mb-2 pr-2 border-r-2" style={{ borderColor: "#E3D5C0" }}>
+                          <div className="text-xs opacity-60">{q.text}</div>
+                          <div className="text-sm leading-relaxed">{q.answer}</div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="mb-1">
+                        <div className="text-xs opacity-60">{e.question}</div>
+                        <div className="text-sm leading-relaxed">{e.answer}</div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="rounded-2xl px-5 py-5 mb-4 leading-relaxed text-base" style={{ fontFamily: "'Frank Ruhl Libre', serif", background: "#3A332B", color: "#F2E9DC" }}>{summary.coreTheme}</div>
+
+              {summary.refinementNote && (
+                <div className="rounded-xl px-4 py-3 mb-6" style={{ background: "#EFE6D6" }}>
+                  <div className="text-xs font-medium mb-1" style={{ color: "#A98B4E" }}>מה זוקק ביחס לסבב הקודם</div>
+                  <div className="text-sm leading-relaxed">{summary.refinementNote}</div>
+                </div>
+              )}
+
+              <ThreadDivider />
+
+              <div className="mt-6 mb-2 text-sm font-medium" style={{ color: "#8FA793" }}>מהגלוי אל הסמוי</div>
+              <div className="flex flex-col gap-2 mb-6">
+                {summary.fromVisibleToHidden.map((r, i) => (
+                  <div key={i} className="rounded-xl px-4 py-3" style={cardStyle}>
+                    <div className="text-xs font-medium mb-1" style={{ color: "#8FA793" }}>{r.label}</div>
+                    <div className="text-sm leading-relaxed">{r.value}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mb-2 text-sm font-medium" style={{ color: "#BE7350" }}>מהסמוי אל הגלוי</div>
+              <div className="flex flex-col gap-2 mb-8">
+                {summary.fromHiddenToVisible.map((r, i) => (
+                  <div key={i} className="rounded-xl px-4 py-3" style={cardStyle}>
+                    <div className="text-xs font-medium mb-1" style={{ color: "#BE7350" }}>{r.label}</div>
+                    <div className="text-sm leading-relaxed">{r.value}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="mb-1 text-sm font-medium" style={{ color: "#BE7350" }}>הדרך המומלצת להפיק ערך אמיתי</div>
+          <ExportBlock primary label="הצג/י והעתק/י סיכום עם הנחיות ל-AI" icon={Sparkles} getText={() => buildAIHandoffText(activeRound)} />
+          <p className="text-[11px] opacity-50 mt-1.5 mb-4 leading-relaxed px-1">
+            מסמך שכולל את כל השאלות והתשובות + הנחיה מפורטת לכל צ'אט AI (Claude, ChatGPT ואחרים): לא לנתח מיד, אלא קודם לנהל איתך שיחה משמעותית ולאסוף מידע נוסף, ורק אז לגבש יחד גרעין נושא ואסטרטגיה מעשית למפגש הבא עם הנושא. פשוט מדביקים כהודעה ראשונה בשיחה חדשה. מסמך פשוט להוריד הוא רק חצי מהעבודה - ההנחיות כאן הן החלק שהופך אותו לתהליך אמיתי.
+          </p>
+
+          <div className="rounded-xl px-4 py-4 mb-4" style={{ background: "#EFE6D6" }}>
+            <div className="text-sm font-medium mb-1" style={{ color: "#A98B4E" }}>קיבלת תשובה מ-AI שעבדת איתו? הדבק/י אותה כאן</div>
+            <p className="text-xs opacity-60 mb-2 leading-relaxed">כדי לקבל מסמך אחד שלם: התשובה שבחרת בראש, והשאלון שמילאת בסוף.</p>
+            <textarea
+              value={externalAI}
+              onChange={(e) => setExternalAI(e.target.value)}
+              rows={6}
+              placeholder="הדבק/י כאן את התשובה/הניתוח שקיבלת מה-AI שבחרת לעבוד איתו..."
+              className="w-full rounded-lg px-3 py-2 text-sm outline-none leading-relaxed"
+              style={{ background: "#fff", border: "1px solid #E3D5C0" }}
+            />
+            {externalAI.trim() && (
+              <>
+                <DocxDownloadButton
+                  label="הורד/י מסמך משולב כ-Word (docx)"
+                  title={`גרעין הנושא - ${patientName}`}
+                  buildBlocks={() => combinedDocxBlocks(activeRound, externalAI)}
+                  filename={`גרעין-הנושא-משולב-${patientName}-${fmtDate(activeRound.dateISO)}.docx`}
+                />
+                <ExportBlock label="הצג/י והעתק/י מסמך משולב כטקסט" icon={Copy} getText={() => combinedText(activeRound, externalAI)} filename={`גרעין-הנושא-משולב-${patientName}-${fmtDate(activeRound.dateISO)}.txt`} />
+              </>
+            )}
+          </div>
+
+          <div className="mb-1 text-xs font-medium opacity-50">גיבוי פשוט (בלי AI)</div>
+          <DocxDownloadButton label="הורד/י כקובץ Word (docx)" title={`גרעין הנושא - ${patientName}`} buildBlocks={() => roundDocxBlocks(activeRound)} filename={`גרעין-הנושא-${patientName}-${fmtDate(activeRound.dateISO)}.docx`} />
+          <ExportBlock label="הצג/י והעתק/י כטקסט" icon={Copy} getText={() => fullText(activeRound)} filename={`gerein-${patientName}-${fmtDate(activeRound.dateISO)}.txt`} />
+          <ExportBlock label="שמור/י סבב זה כקובץ (להמשכיות עתידית)" icon={FileDown} getText={() => JSON.stringify(buildRoundExport(patientName, activeRound), null, 2)} filename={`gerein-${patientName}-${fmtDate(activeRound.dateISO)}.json`} isJson />
+          <button onClick={() => window.print()} className="w-full mt-2 rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2" style={cardStyle}>
+            <FileDown size={16} /> הדפס/י או שמור/י כ-PDF
+          </button>
+          <p className="text-[11px] opacity-45 mb-2 mt-1 leading-relaxed px-1">בתצוגה מקדימה כמו כאן ההדפסה עלולה לא להיפתח - זה עובד ברגע שהכלי יהיה דף עצמאי.</p>
+
+          <button onClick={() => setScreen("roundChoice")} className="w-full mt-6 rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2" style={{ background: "#3A332B", color: "#F2E9DC" }}>
+            <Sparkles size={16} /> התחל/י סבב המשך חדש
+          </button>
+
+          {activeRound.opening && (
+            <a
+              href={`${QUICK_TOOL_URL}?story=${encodeURIComponent(activeRound.opening.a)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full mt-3 rounded-xl py-3 text-sm font-medium flex items-center justify-center gap-2"
+              style={cardStyle}
+            >
+              <ArrowUpRight size={16} style={{ color: "#A98B4E" }} /> נסה/י גם את "מסיפור לגרעין" - גרעינים נוספים לבחירה
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+const rootEl = document.getElementById('root');
+const root = ReactDOM.createRoot(rootEl);
+root.render(<App />);
+
+</script>
+</body>
+</html>
